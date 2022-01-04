@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote</title>
+    <style>
+        body {
+            background-color: black;
+        }
+        #container {
+            /* background-color: black; */
+            margin-top: 125px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .button {
+            background-color: white;
+            border: 2px solid rgb(221, 169, 0);
+            border-radius: 40px;
+            height: 100px
+        }
+
+        .button:hover {
+            border-color: red;
+        }
+
+        #left {
+            background-image: url(./images.jpeg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: 50%, 50%;
+        }
+
+        #stop {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        #stop:hover {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div></div>
+        <div class="button"></div>
+        <div></div>
+        <div class="button" id="left"></div>
+        <div class="button"></div>
+        <div class="button"></div>
+        <div class="button"></div>
+        <div class="button" id="stop">STOP</div>
+        <div class="button"></div>
+    </div>
+</body>
+</html>
