@@ -101,7 +101,22 @@ const char index_html[] PROGMEM = R"rawliteral(
       background-image: url(https://drive.google.com/file/d/1hQZtFYp1RszfRIm9QW33MP5mYo9hsOvl/view?usp=sharing);
     }
     #right {
-      background-image: url(https://drive.google.com/file/d/1hQZtFYp1RszfRIm9QW33MP5mYo9hsOvl/view?usp=sharing);
+      background-image: url(https://drive.google.com/file/d/1XWsH8zeHpRvcE6TGgdYAJfZBbU43PRgb/view?usp=sharing);
+    }
+    #front {
+      background-image: url(https://drive.google.com/file/d/1iLNZ7GTJMH8loJwh4nHBseNoOg9aYkxh/view?usp=sharing);
+    }
+    #back {
+      background-image: url(https://drive.google.com/file/d/1RCd-2Gldub1kAtlEwBIVmrgWHA6zyR4Q/view?usp=sharing);
+    }
+    #anticlockwise {
+      background-image: url(https://drive.google.com/file/d/1_cO-0U15CCY0hoE2h9IC4Hd51qD0o3aL/view?usp=sharing);
+    }
+    #clockwise {
+      background-image: url(https://drive.google.com/file/d/1of_Kejhil3VUU-YsTAIUAfPs4gkdrnEI/view?usp=sharing);
+    }
+    #stop {
+      background-image: url(https://drive.google.com/file/d/1y7Z9aJO944Ci4d_Lt_nWBIljOPxh9JDb/view?usp=sharing);
     }
     #stop {
       display: flex;
