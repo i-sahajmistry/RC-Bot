@@ -67,18 +67,52 @@ const char index_html[] PROGMEM = R"rawliteral(
     -ms-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
-   }
-   /*.button:hover {background-color: #0f8b8d}*/
-   .button:active {
-     background-color: #0f8b8d;
-     box-shadow: 2 2px #CDCDCD;
-     transform: translateY(2px);
-   }
-   .state {
-     font-size: 1.5rem;
-     color:#8c8c8c;
-     font-weight: bold;
-   }
+    }
+    /*.button:hover {background-color: #0f8b8d}*/
+    .button:active {
+      background-color: #0f8b8d;
+      box-shadow: 2 2px #CDCDCD;
+      transform: translateY(2px);
+    }
+    .state {
+      font-size: 1.5rem;
+      color:#8c8c8c;
+      font-weight: bold;
+    }
+    #container {
+      /* background-color: black; */
+      margin-top: 125px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .button {
+      border: 2px solid rgb(221, 169, 0);
+      border-radius: 40px;
+      height: 100px
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: 50%, 50%;
+    }
+    .button:hover {
+      border-color: red;
+    }
+    #left {
+      background-image: url(https://drive.google.com/file/d/1hQZtFYp1RszfRIm9QW33MP5mYo9hsOvl/view?usp=sharing);
+    }
+    #right {
+      background-image: url(https://drive.google.com/file/d/1hQZtFYp1RszfRIm9QW33MP5mYo9hsOvl/view?usp=sharing);
+    }
+    #stop {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30px;
+      font-weight: bold;
+    }
+    #stop:hover {
+      color: red;
+    }
   </style>
 <title>ESP Web Server</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -86,18 +120,32 @@ const char index_html[] PROGMEM = R"rawliteral(
 </head>
 <body>
   <div class="topnav">
-    <h1>ESP WebSocket Server</h1>
+  <h1>ESP WebSocket Server</h1>
   </div>
   <div class="content">
     <div class="card">
-      <h2>Output - GPIO 2</h2>
+      <h2>Output - RC Bot</h2>
       <p class="state">state: <span id="state">%STATE%</span></p>
       <p><button id="button" class="button">Toggle</button></p>
+      <div id="container">
+        <div class="" id="" ></div>
+        <div class="button" id="front"     ></div>
+        <div class="" id=""></div>
+        <div class="button" id="left"  ></div>
+        <div class="button" id="back"      ></div>
+        <div class="button" id="right" ></div>
+        <div class="button" id="anticlockwise" ></div>
+        <div class="button" id="stop"      ></div>
+        <div class="button" id="clockwise" ></div>
+    </div>
     </div>
   </div>
 <script>
   var gateway = `ws://${window.location.hostname}/ws`;
   var websocket;
+  var d = '1010'
+  var l = '000'
+  var r = '000'
   window.addEventListener('load', onLoad);
   function initWebSocket() {
     console.log('Trying to open a WebSocket connection...');
@@ -130,8 +178,38 @@ const char index_html[] PROGMEM = R"rawliteral(
   function initButton() {
     document.getElementById('button').addEventListener('click', toggle);
   }
+  function frontLeft(){
+    websocket.send('1010100200');
+  }
+  function front(){
+    websocket.send('1010100100');
+  }
+  function frontRight(){
+    websocket.send('1010200100');
+  }
+  function backLeft(){
+    websocket.send('0101100200');
+  }
+  function back(){
+    websocket.send('0101100100');
+  }
+  function backRight(){
+    websocket.send('0101200100');
+  }
+  function anticlockwise(){
+    websocket.send('0110100100');
+  }
+  function clockwise(){
+    websocket.send('1001100100');
+  }
+  function stop(){
+    websocket.send('1010000000');
+  }
+  function sendSpeed(){
+    websocket.send(`${d}${l}${r}`);
+  }
   function toggle(){
-    websocket.send('toggle1');
+    websocket.send(`toggle1`);
   }
 </script>
 </body>
