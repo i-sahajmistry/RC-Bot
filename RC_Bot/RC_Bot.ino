@@ -6,6 +6,9 @@
 const char* ssid = "WIFI";
 const char* password = "123456789";
 
+int m[6] = {14,12,15,13,2,0};
+int a[10];
+
 bool ledState = 0;
 const int ledPin = LED_BUILTIN;
 
@@ -52,7 +55,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     padding-bottom:20px;
   }
   .button {
-    padding: 15px 50px;
+    padding: 15px 20px;
     font-size: 24px;
     text-align: center;
     outline: none;
@@ -80,8 +83,6 @@ const char index_html[] PROGMEM = R"rawliteral(
       font-weight: bold;
     }
     #container {
-      /* background-color: black; */
-      margin-top: 125px;
       display: grid;
       gap: 10px;
       grid-template-columns: repeat(3, 1fr);
@@ -97,28 +98,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     .button:hover {
       border-color: red;
     }
-    #left {
-      background-image: url(https://drive.google.com/file/d/1hQZtFYp1RszfRIm9QW33MP5mYo9hsOvl/view?usp=sharing);
-    }
-    #right {
-      background-image: url(https://drive.google.com/file/d/1XWsH8zeHpRvcE6TGgdYAJfZBbU43PRgb/view?usp=sharing);
-    }
-    #front {
-      background-image: url(https://drive.google.com/file/d/1iLNZ7GTJMH8loJwh4nHBseNoOg9aYkxh/view?usp=sharing);
-    }
-    #back {
-      background-image: url(https://drive.google.com/file/d/1RCd-2Gldub1kAtlEwBIVmrgWHA6zyR4Q/view?usp=sharing);
-    }
-    #anticlockwise {
-      background-image: url(https://drive.google.com/file/d/1_cO-0U15CCY0hoE2h9IC4Hd51qD0o3aL/view?usp=sharing);
-    }
-    #clockwise {
-      background-image: url(https://drive.google.com/file/d/1of_Kejhil3VUU-YsTAIUAfPs4gkdrnEI/view?usp=sharing);
-    }
-    #stop {
-      background-image: url(https://drive.google.com/file/d/1y7Z9aJO944Ci4d_Lt_nWBIljOPxh9JDb/view?usp=sharing);
-    }
-    #stop {
+    .button {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -127,6 +107,9 @@ const char index_html[] PROGMEM = R"rawliteral(
     }
     #stop:hover {
       color: red;
+    }
+    .toggle {
+      margin: auto;
     }
   </style>
 <title>ESP Web Server</title>
@@ -141,17 +124,17 @@ const char index_html[] PROGMEM = R"rawliteral(
     <div class="card">
       <h2>Output - RC Bot</h2>
       <p class="state">state: <span id="state">%STATE%</span></p>
-      <p><button id="button" class="button">Toggle</button></p>
+      <p><button id="button" class="button toggle">Toggle</button></p>
       <div id="container">
-        <div class="" id="" ></div>
-        <div class="button" id="front"     ></div>
-        <div class="" id=""></div>
-        <div class="button" id="left"  ></div>
-        <div class="button" id="back"      ></div>
-        <div class="button" id="right" ></div>
-        <div class="button" id="anticlockwise" ></div>
-        <div class="button" id="stop"      ></div>
-        <div class="button" id="clockwise" ></div>
+        <div class="button" id="frontLeft">FL</div>
+        <div class="button" id="front">F</div>
+        <div class="button" id="frontRight">FR</div>
+        <div class="button" id="anticlockwise">A</div>
+        <div class="button" id="stop">S</div>
+        <div class="button" id="clockwise">C</div>
+        <div class="button" id="backLeft">BL</div>
+        <div class="button" id="back">B</div>
+        <div class="button" id="backRight">BR</div>
     </div>
     </div>
   </div>
@@ -192,6 +175,15 @@ const char index_html[] PROGMEM = R"rawliteral(
   }
   function initButton() {
     document.getElementById('button').addEventListener('click', toggle);
+    document.getElementById('front').addEventListener('click', front);
+    document.getElementById('back').addEventListener('click', back);
+    document.getElementById('frontRight').addEventListener('click', frontRight);
+    document.getElementById('frontLeft').addEventListener('click', frontLeft);
+    document.getElementById('backRight').addEventListener('click', backRight);
+    document.getElementById('backLeft').addEventListener('click', backLeft);
+    document.getElementById('anticlockwise').addEventListener('click', anticlockwise);
+    document.getElementById('clockwise').addEventListener('click', clockwise);
+    document.getElementById('stop').addEventListener('click', stop);
   }
   function frontLeft(){
     websocket.send('1010100200');
@@ -220,11 +212,8 @@ const char index_html[] PROGMEM = R"rawliteral(
   function stop(){
     websocket.send('1010000000');
   }
-  function sendSpeed(){
-    websocket.send(`${d}${l}${r}`);
-  }
   function toggle(){
-    websocket.send(`toggle1`);
+    websocket.send('toggle');
   }
 </script>
 </body>
@@ -235,14 +224,49 @@ void notifyClients() {
   ws.textAll(String(ledState));
 }
 
+int cti(char c) {
+    return (int(c) - 48);
+}
+
+int sti(int s) {
+  int n = 0;
+  for(int i = s; i < s + 3; i++)
+  {
+    n *= 10;
+    n += cti(a[i]);
+  }
+  return n;
+}
+
+void updateSpeed() {
+  for(int i = 0; i < 4; i++)
+    {
+      digitalWrite(m[i], cti(a[i]));
+      Serial.println(cti(a[i]));
+    }
+    analogWrite (m[4], sti(4));
+    Serial.println(sti(4));
+    analogWrite (m[5], sti(7));
+    Serial.println(sti(7));
+    Serial.println();
+}
+
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
     data[len] = 0;
-    if (strcmp((char*)data, "toggle1") == 0) {
+    if (strcmp((char*)data, "toggle") == 0) {
       Serial.println((char*)data);
       ledState = !ledState;
       notifyClients();
+    }
+    else {
+      char* c = (char*)data;
+      for(int i = 0; i < 10; i++)
+      {
+        a[i] = c[i];
+      }
+      updateSpeed();
     }
   }
 }
